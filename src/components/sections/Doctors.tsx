@@ -1,19 +1,11 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { X, Calendar, Clock, Award } from 'lucide-react';
 import { doctors } from '../../data/hospitalData';
 import { Section, SectionHeader } from '../ui/Section';
 import { Button } from '../ui/Button';
 import { useInView } from '../../hooks/useAnimation';
-import { dispatchBookingRequest } from '../../hooks/useBooking';
 import type { Doctor } from '../../types';
-
-// Map doctor specialties to departments
-const doctorToDepartment: Record<string, string> = {
-  'dr-anjali-sharma': 'Gynecology',
-  'dr-rajesh-kulkarni': 'General Medicine',
-  'dr-sneha-patil': 'Pediatrics',
-  'dr-vikram-deshmukh': 'Surgery Consultation',
-};
 
 function DoctorCard({
   doctor,
@@ -24,13 +16,12 @@ function DoctorCard({
   onClick: () => void;
   index: number;
 }) {
+  const navigate = useNavigate();
   const { ref, isInView } = useInView(0.1);
 
   const handleBookClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const department = doctorToDepartment[doctor.id] || '';
-    dispatchBookingRequest({ department, preferredTime: '' });
-    onClick();
+    navigate('/book');
   };
 
   return (
@@ -88,6 +79,8 @@ function DoctorModal({
   isOpen: boolean;
   onClose: () => void;
 }) {
+  const navigate = useNavigate();
+
   if (!isOpen || !doctor) return null;
 
   const handleClick = (e: React.MouseEvent) => {
@@ -97,17 +90,8 @@ function DoctorModal({
   };
 
   const handleBookClick = () => {
-    const department = doctorToDepartment[doctor.id] || '';
-    dispatchBookingRequest({ department, preferredTime: '' });
     onClose();
-    const callbackSection = document.querySelector('#callback');
-    if (callbackSection) {
-      const offsetTop =
-        callbackSection.getBoundingClientRect().top +
-        window.pageYOffset -
-        80;
-      window.scrollTo({ top: offsetTop, behavior: 'smooth' });
-    }
+    navigate('/book');
   };
 
   return (

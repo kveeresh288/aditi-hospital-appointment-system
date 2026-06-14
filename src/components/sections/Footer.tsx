@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { Heart, Facebook, Instagram, Twitter, Linkedin, MapPin, Phone, Mail, ArrowUp } from 'lucide-react';
 import { hospitalInfo, navLinks, services } from '../../data/hospitalData';
 
@@ -150,6 +151,10 @@ export function Footer() {
         <div className="container-custom py-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-gray-400 text-sm text-center md:text-left">
             © {new Date().getFullYear()} {hospitalInfo.name}. All rights reserved.
+            {' '}
+            <Link to="/reception/login" className="text-gray-500 hover:text-gray-300 transition-colors">
+              Staff Login
+            </Link>
           </p>
           <button
             onClick={scrollToTop}

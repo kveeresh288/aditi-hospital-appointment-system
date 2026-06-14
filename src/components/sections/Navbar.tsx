@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Menu, X, Phone, Heart } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Menu, X, Phone, Heart, CalendarCheck } from 'lucide-react';
 import { navLinks, hospitalInfo } from '../../data/hospitalData';
 import { Button } from '../ui/Button';
 import { useScrollSpy } from '../../hooks/useAnimation';
 
 export function Navbar() {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -91,9 +93,15 @@ export function Navbar() {
               <Phone className="w-4 h-4 mr-2" />
               <span className="font-medium">{hospitalInfo.contact.phone}</span>
             </a>
+            <button
+              onClick={() => navigate('/my-appointments')}
+              className="text-base font-medium text-body hover:text-primary transition-colors"
+            >
+              My Appointments
+            </button>
             <Button
-              onClick={() => scrollToSection('#callback')}
-              icon={<Phone className="w-4 h-4" />}
+              onClick={() => navigate('/book')}
+              icon={<CalendarCheck className="w-4 h-4" />}
             >
               Book Appointment
             </Button>
@@ -142,10 +150,22 @@ export function Navbar() {
                 <Phone className="w-4 h-4 mr-3" />
                 {hospitalInfo.contact.phone}
               </a>
+              <button
+                onClick={() => {
+                  setIsOpen(false);
+                  navigate('/my-appointments');
+                }}
+                className="block w-full text-left px-4 py-3 rounded-lg font-medium text-body hover:bg-gray-50 transition-colors"
+              >
+                My Appointments
+              </button>
               <Button
-                onClick={() => scrollToSection('#callback')}
+                onClick={() => {
+                  setIsOpen(false);
+                  navigate('/book');
+                }}
                 className="w-full"
-                icon={<Phone className="w-4 h-4" />}
+                icon={<CalendarCheck className="w-4 h-4" />}
               >
                 Book Appointment
               </Button>

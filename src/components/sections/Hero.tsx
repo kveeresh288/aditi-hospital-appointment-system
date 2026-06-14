@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Calendar, Phone } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { heroImage } from '../../data/hospitalData';
 import { useInView } from '../../hooks/useAnimation';
 
 export function Hero() {
+  const navigate = useNavigate();
   const { ref, isInView } = useInView(0.1);
   const [imageLoaded, setImageLoaded] = useState(false);
 
@@ -95,7 +97,7 @@ export function Hero() {
               variant="primary"
               size="lg"
               icon={<Calendar className="w-5 h-5" />}
-              onClick={() => scrollToSection('#callback')}
+              onClick={() => navigate('/book')}
             >
               Book Appointment
             </Button>
