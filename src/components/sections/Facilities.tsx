@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { X } from 'lucide-react';
-import { facilities } from '../../data/hospitalData';
 import { Section, SectionHeader } from '../ui/Section';
 import { useInView } from '../../hooks/useAnimation';
+import { useTable } from '../../hooks/useContent';
+import { FALLBACK_FACILITIES } from '../../data/fallbackContent';
 
 function FacilityCard({
   title,
@@ -97,6 +98,7 @@ function FacilityModal({
 }
 
 export function Facilities() {
+  const { data: facilities } = useTable('facilities', FALLBACK_FACILITIES);
   const [selectedFacility, setSelectedFacility] = useState<{
     title: string;
     description: string;
@@ -112,7 +114,7 @@ export function Facilities() {
       <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
         {facilities.map((facility, index) => (
           <FacilityCard
-            key={index}
+            key={facility.id}
             title={facility.title}
             image={facility.image}
             index={index}

@@ -4,6 +4,7 @@ import { BookingPage } from './pages/BookingPage';
 import { MyAppointmentsPage } from './pages/MyAppointmentsPage';
 import { ReceptionLoginPage } from './pages/reception/ReceptionLoginPage';
 import { ReceptionDashboardPage } from './pages/reception/ReceptionDashboardPage';
+import { ContentManagerPage } from './pages/reception/ContentManagerPage';
 import { ProtectedRoute } from './components/reception/ProtectedRoute';
 
 function App() {
@@ -20,6 +21,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <ReceptionDashboardPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/reception/content"
+            element={
+              <ProtectedRoute>
+                <ContentManagerPage />
               </ProtectedRoute>
             }
           />

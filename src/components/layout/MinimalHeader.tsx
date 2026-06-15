@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Heart, ArrowLeft } from 'lucide-react';
-import { hospitalInfo } from '../../data/hospitalData';
+import { useHospitalSettings } from '../../hooks/useContent';
 
 interface MinimalHeaderProps {
   rightSlot?: React.ReactNode;
@@ -13,6 +13,8 @@ export function MinimalHeader({
   backTo = '/',
   backLabel = 'Back to Website',
 }: MinimalHeaderProps) {
+  const { settings } = useHospitalSettings();
+
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-border">
       <div className="container-custom">
@@ -23,10 +25,10 @@ export function MinimalHeader({
             </div>
             <div>
               <h1 className="text-lg font-bold text-heading leading-tight">
-                {hospitalInfo.name}
+                {settings.name}
               </h1>
               <p className="text-xs text-muted hidden sm:block leading-tight">
-                {hospitalInfo.localName}
+                {settings.local_name}
               </p>
             </div>
           </Link>

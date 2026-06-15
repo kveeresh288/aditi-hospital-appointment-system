@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { X, Calendar, Clock, Award } from 'lucide-react';
-import { doctors } from '../../data/hospitalData';
 import { Section, SectionHeader } from '../ui/Section';
 import { Button } from '../ui/Button';
 import { useInView } from '../../hooks/useAnimation';
+import { useDoctors } from '../../hooks/useContent';
+import { formatAvailability } from '../../data/bookingData';
 import type { Doctor } from '../../types';
 
 function DoctorCard({
@@ -139,7 +140,7 @@ function DoctorModal({
               <Calendar className="w-5 h-5 text-secondary mr-3 mt-0.5" />
               <div>
                 <p className="text-sm text-muted">Availability</p>
-                <p className="text-body font-medium">{doctor.availability}</p>
+                <p className="text-body font-medium">{formatAvailability(doctor)}</p>
               </div>
             </div>
           </div>
@@ -163,6 +164,7 @@ function DoctorModal({
 }
 
 export function Doctors() {
+  const { data: doctors } = useDoctors();
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
 
   return (

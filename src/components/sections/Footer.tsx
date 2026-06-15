@@ -1,8 +1,14 @@
 import { Link } from 'react-router-dom';
 import { Heart, Facebook, Instagram, Twitter, Linkedin, MapPin, Phone, Mail, ArrowUp } from 'lucide-react';
-import { hospitalInfo, navLinks, services } from '../../data/hospitalData';
+import { navLinks } from '../../data/hospitalData';
+import { useHospitalSettings, useTable } from '../../hooks/useContent';
+import { FALLBACK_SERVICES } from '../../data/fallbackContent';
 
 export function Footer() {
+  const { settings } = useHospitalSettings();
+  const { data: services } = useTable('services', FALLBACK_SERVICES);
+  const addressFull = `${settings.address_street}, ${settings.address_city}, ${settings.address_state} ${settings.address_pincode}`;
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -27,15 +33,15 @@ export function Footer() {
                 <Heart className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-white">{hospitalInfo.name}</h3>
-                <p className="text-xs text-gray-400">{hospitalInfo.localName}</p>
+                <h3 className="text-xl font-bold text-white">{settings.name}</h3>
+                <p className="text-xs text-gray-400">{settings.local_name}</p>
               </div>
             </div>
             <p className="text-white text-sm leading-relaxed mb-6">
-              {hospitalInfo.tagline}
+              {settings.tagline}
             </p>
             <p className="text-gray-400 text-sm leading-relaxed">
-              {hospitalInfo.description}
+              {settings.description}
             </p>
           </div>
 
@@ -60,8 +66,8 @@ export function Footer() {
           <div>
             <h4 className="text-lg font-semibold mb-4">Our Services</h4>
             <ul className="space-y-3">
-              {services.slice(0, 6).map((service, index) => (
-                <li key={index}>
+              {services.slice(0, 6).map((service) => (
+                <li key={service.id}>
                   <button
                     onClick={() => scrollToSection('#services')}
                     className="text-gray-300 hover:text-white transition-colors text-left"
@@ -80,25 +86,25 @@ export function Footer() {
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
                 <span className="text-gray-300 text-sm">
-                  {hospitalInfo.address.full}
+                  {addressFull}
                 </span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-5 h-5 text-primary flex-shrink-0" />
                 <a
-                  href={`tel:${hospitalInfo.contact.phone}`}
+                  href={`tel:${settings.phone}`}
                   className="text-gray-300 hover:text-white transition-colors text-sm"
                 >
-                  {hospitalInfo.contact.phone}
+                  {settings.phone}
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-primary flex-shrink-0" />
                 <a
-                  href={`mailto:${hospitalInfo.contact.email}`}
+                  href={`mailto:${settings.email}`}
                   className="text-gray-300 hover:text-white transition-colors text-sm"
                 >
-                  {hospitalInfo.contact.email}
+                  {settings.email}
                 </a>
               </li>
             </ul>
@@ -106,7 +112,7 @@ export function Footer() {
             {/* Social Links */}
             <div className="flex gap-3 mt-6">
               <a
-                href={hospitalInfo.social.facebook}
+                href={settings.social_facebook}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-primary transition-colors"
@@ -115,7 +121,7 @@ export function Footer() {
                 <Facebook className="w-5 h-5" />
               </a>
               <a
-                href={hospitalInfo.social.instagram}
+                href={settings.social_instagram}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-primary transition-colors"
@@ -124,7 +130,7 @@ export function Footer() {
                 <Instagram className="w-5 h-5" />
               </a>
               <a
-                href={hospitalInfo.social.twitter}
+                href={settings.social_twitter}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-primary transition-colors"
@@ -133,7 +139,7 @@ export function Footer() {
                 <Twitter className="w-5 h-5" />
               </a>
               <a
-                href={hospitalInfo.social.linkedin}
+                href={settings.social_linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-primary transition-colors"
@@ -150,7 +156,7 @@ export function Footer() {
       <div className="border-t border-gray-800">
         <div className="container-custom py-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-gray-400 text-sm text-center md:text-left">
-            © {new Date().getFullYear()} {hospitalInfo.name}. All rights reserved.
+            © {new Date().getFullYear()} {settings.name}. All rights reserved.
             {' '}
             <Link to="/reception/login" className="text-gray-500 hover:text-gray-300 transition-colors">
               Staff Login

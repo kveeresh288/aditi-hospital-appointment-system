@@ -1,10 +1,12 @@
 import { MapPin, Phone, Mail, Clock, AlertTriangle, ExternalLink } from 'lucide-react';
-import { hospitalInfo } from '../../data/hospitalData';
 import { Section, SectionHeader } from '../ui/Section';
 import { useInView } from '../../hooks/useAnimation';
+import { useHospitalSettings } from '../../hooks/useContent';
 
 export function Contact() {
   const { ref, isInView } = useInView(0.1);
+  const { settings } = useHospitalSettings();
+  const addressFull = `${settings.address_street}, ${settings.address_city}, ${settings.address_state} ${settings.address_pincode}`;
 
   return (
     <Section id="contact" background="white">
@@ -26,9 +28,9 @@ export function Contact() {
           {/* Hospital Name */}
           <div>
             <h3 className="text-2xl font-bold text-heading mb-2">
-              {hospitalInfo.name}
+              {settings.name}
             </h3>
-            <p className="text-lg text-muted">{hospitalInfo.localName}</p>
+            <p className="text-lg text-muted">{settings.local_name}</p>
           </div>
 
           {/* Address */}
@@ -38,9 +40,9 @@ export function Contact() {
             </div>
             <div>
               <h4 className="font-semibold text-heading mb-1">Address</h4>
-              <p className="text-muted">{hospitalInfo.address.full}</p>
+              <p className="text-muted">{addressFull}</p>
               <a
-                href={hospitalInfo.mapUrl}
+                href={settings.map_url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center text-primary hover:text-primary-hover mt-2 transition-colors"
@@ -59,10 +61,10 @@ export function Contact() {
             <div>
               <h4 className="font-semibold text-heading mb-1">Phone</h4>
               <a
-                href={`tel:${hospitalInfo.contact.phone}`}
+                href={`tel:${settings.phone}`}
                 className="text-primary hover:text-primary-hover transition-colors block"
               >
-                {hospitalInfo.contact.phone}
+                {settings.phone}
               </a>
               <p className="text-muted text-sm mt-1">
                 Call for appointments and general inquiries
@@ -80,10 +82,10 @@ export function Contact() {
                 Emergency Contact
               </h4>
               <a
-                href={`tel:${hospitalInfo.contact.emergency}`}
+                href={`tel:${settings.emergency_phone}`}
                 className="text-red-600 hover:text-red-700 transition-colors block font-medium"
               >
-                {hospitalInfo.contact.emergency}
+                {settings.emergency_phone}
               </a>
               <p className="text-muted text-sm mt-1">24/7 Emergency Services</p>
             </div>
@@ -97,10 +99,10 @@ export function Contact() {
             <div>
               <h4 className="font-semibold text-heading mb-1">Email</h4>
               <a
-                href={`mailto:${hospitalInfo.contact.email}`}
+                href={`mailto:${settings.email}`}
                 className="text-primary hover:text-primary-hover transition-colors"
               >
-                {hospitalInfo.contact.email}
+                {settings.email}
               </a>
             </div>
           </div>
@@ -114,7 +116,7 @@ export function Contact() {
               <h4 className="font-semibold text-heading mb-1">Working Hours</h4>
               <p className="text-muted">
                 <span className="text-secondary font-medium">
-                  {hospitalInfo.workingHours}
+                  {settings.working_hours}
                 </span>
               </p>
               <p className="text-muted text-sm">
@@ -128,18 +130,18 @@ export function Contact() {
         <div className="relative">
           <div className="rounded-xl overflow-hidden shadow-lg border border-border h-full min-h-[400px]">
             <iframe
-              src={hospitalInfo.mapEmbedUrl}
+              src={settings.map_embed_url}
               width="100%"
               height="100%"
               style={{ border: 0, minHeight: '400px' }}
               allowFullScreen
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              title={`${hospitalInfo.name} Location`}
+              title={`${settings.name} Location`}
             />
           </div>
           <a
-            href={hospitalInfo.mapUrl}
+            href={settings.map_url}
             target="_blank"
             rel="noopener noreferrer"
             className="absolute bottom-4 right-4 bg-white px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-shadow flex items-center gap-2 text-sm font-medium text-heading"

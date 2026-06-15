@@ -1,7 +1,8 @@
 import { Star, Quote } from 'lucide-react';
-import { testimonials } from '../../data/hospitalData';
 import { Section, SectionHeader } from '../ui/Section';
 import { useInView } from '../../hooks/useAnimation';
+import { useTable } from '../../hooks/useContent';
+import { FALLBACK_TESTIMONIALS } from '../../data/fallbackContent';
 
 function TestimonialCard({
   name,
@@ -58,6 +59,8 @@ function TestimonialCard({
 }
 
 export function Testimonials() {
+  const { data: testimonials } = useTable('testimonials', FALLBACK_TESTIMONIALS);
+
   return (
     <Section id="testimonials">
       <SectionHeader
@@ -67,8 +70,12 @@ export function Testimonials() {
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
         {testimonials.map((testimonial, index) => (
           <TestimonialCard
-            key={index}
-            {...testimonial}
+            key={testimonial.id}
+            name={testimonial.name}
+            location={testimonial.location}
+            rating={testimonial.rating}
+            text={testimonial.text}
+            avatar={testimonial.avatar}
             index={index}
           />
         ))}

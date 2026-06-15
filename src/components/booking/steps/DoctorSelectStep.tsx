@@ -1,26 +1,27 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { ArrowRight, ArrowLeft, Clock, IndianRupee, Stethoscope } from 'lucide-react';
 import { Button } from '../../ui/Button';
-import { bookingDoctors, bookingDepartments, type BookingDoctor } from '../../../data/bookingData';
+import { formatTimeLabel } from '../../../data/bookingData';
+import type { Doctor } from '../../../types';
 
 interface DoctorSelectStepProps {
+  doctors: Doctor[];
   selectedDoctorId: string;
-  onContinue: (doctor: BookingDoctor) => void;
+  onContinue: (doctor: Doctor) => void;
   onBack: () => void;
 }
 
-export function DoctorSelectStep({ selectedDoctorId, onContinue, onBack }: DoctorSelectStepProps) {
+export function DoctorSelectStep({ doctors, selectedDoctorId, onContinue, onBack }: DoctorSelectStepProps) {
   const [department, setDepartment] = useState<string>('all');
   const [selected, setSelected] = useState(selectedDoctorId);
 
+  const departments = useMemo(
+    () => Array.from(new Set(doctors.map((d) => d.department))),
+    [doctors]
+  );
+
   const visibleDoctors =
-    department === 'all'
-      ? bookingDoctors
-      : bookingDoctors.filter((doc) =>
-          bookingDepartments
-            .find((d) => d.label === department)
-            ?.doctorIds.includes(doc.id)
-        );
+    department === 'all' ? doctors : doctors.filter((doc) => doc.department === department);
 
   return (
     <div>
@@ -41,17 +42,17 @@ export function DoctorSelectStep({ selectedDoctorId, onContinue, onBack }: Docto
         >
           All Departments
         </button>
-        {bookingDepartments.map((dept) => (
+        {departments.map((dept) => (
           <button
-            key={dept.label}
-            onClick={() => setDepartment(dept.label)}
+            key={dept}
+            onClick={() => setDepartment(dept)}
             className={`px-4 py-2 rounded-full text-sm font-medium border transition-colors ${
-              department === dept.label
+              department === dept
                 ? 'bg-primary text-white border-primary'
                 : 'bg-white text-body border-border hover:border-primary'
             }`}
           >
-            {dept.label}
+            {dept}
           </button>
         ))}
       </div>
@@ -110,7 +111,7 @@ export function DoctorSelectStep({ selectedDoctorId, onContinue, onBack }: Docto
           iconPosition="right"
           disabled={!selected}
           onClick={() => {
-            const doctor = bookingDoctors.find((d) => d.id === selected);
+            const doctor = doctors.find((d) => d.id === selected);
             if (doctor) onContinue(doctor);
           }}
         >
@@ -121,12 +122,6 @@ export function DoctorSelectStep({ selectedDoctorId, onContinue, onBack }: Docto
   );
 }
 
-function formatWorkingHours(doctor: BookingDoctor): string {
-  const fmt = (time: string) => {
-    const [h, m] = time.split(':').map(Number);
-    const period = h >= 12 ? 'PM' : 'AM';
-    const hour12 = h % 12 === 0 ? 12 : h % 12;
-    return `${hour12}${m ? ':' + String(m).padStart(2, '0') : ''} ${period}`;
-  };
-  return `${fmt(doctor.startTime)} - ${fmt(doctor.endTime)}`;
+function formatWorkingHours(doctor: Doctor): string {
+  return `${formatTimeLabel(doctor.startTime)} - ${formatTimeLabel(doctor.endTime)}`;
 }

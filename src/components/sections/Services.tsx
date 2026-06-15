@@ -1,9 +1,11 @@
 import { ArrowRight } from 'lucide-react';
-import { services } from '../../data/hospitalData';
 import { Section, SectionHeader } from '../ui/Section';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { useInView } from '../../hooks/useAnimation';
+import { useTable } from '../../hooks/useContent';
+import { FALLBACK_SERVICES } from '../../data/fallbackContent';
+import { ICON_MAP, DEFAULT_ICON } from '../../lib/iconMap';
 
 function ServiceCard({
   icon: Icon,
@@ -49,6 +51,8 @@ function ServiceCard({
 }
 
 export function Services() {
+  const { data: services } = useTable('services', FALLBACK_SERVICES);
+
   return (
     <Section id="services">
       <SectionHeader
@@ -58,8 +62,8 @@ export function Services() {
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {services.map((service, index) => (
           <ServiceCard
-            key={index}
-            icon={service.icon}
+            key={service.id}
+            icon={ICON_MAP[service.icon] ?? DEFAULT_ICON}
             title={service.title}
             description={service.description}
             index={index}

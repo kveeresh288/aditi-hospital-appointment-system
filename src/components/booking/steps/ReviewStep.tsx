@@ -18,13 +18,12 @@ import {
   formatDateLabel,
   formatTimeLabel,
   generateBookingReference,
-  type BookingDoctor,
 } from '../../../data/bookingData';
-import type { Appointment, BookingDraft } from '../../../types';
+import type { Appointment, BookingDraft, Doctor } from '../../../types';
 
 interface ReviewStepProps {
   draft: BookingDraft;
-  doctor: BookingDoctor;
+  doctor: Doctor;
   onConfirmed: (appointment: Appointment) => void;
   onBack: () => void;
 }

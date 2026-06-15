@@ -3,16 +3,16 @@ import { ArrowRight, ArrowLeft, CalendarDays, Loader2 } from 'lucide-react';
 import { Button } from '../../ui/Button';
 import { supabase } from '../../../lib/supabase';
 import {
-  type BookingDoctor,
   getAvailableDates,
   generateTimeSlots,
   formatDateLabel,
   formatTimeLabel,
   toDateKey,
 } from '../../../data/bookingData';
+import type { Doctor } from '../../../types';
 
 interface DateTimeStepProps {
-  doctor: BookingDoctor;
+  doctor: Doctor;
   selectedDate: string;
   selectedTime: string;
   onContinue: (date: string, time: string) => void;

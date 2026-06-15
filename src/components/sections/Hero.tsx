@@ -2,19 +2,22 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Calendar, Phone } from 'lucide-react';
 import { Button } from '../ui/Button';
-import { heroImage } from '../../data/hospitalData';
 import { useInView } from '../../hooks/useAnimation';
+import { useHospitalSettings } from '../../hooks/useContent';
 
 export function Hero() {
   const navigate = useNavigate();
   const { ref, isInView } = useInView(0.1);
+  const { settings } = useHospitalSettings();
+  const heroImage = settings.hero_image;
   const [imageLoaded, setImageLoaded] = useState(false);
 
   useEffect(() => {
+    setImageLoaded(false);
     const img = new Image();
     img.src = heroImage;
     img.onload = () => setImageLoaded(true);
-  }, []);
+  }, [heroImage]);
 
   const scrollToSection = (href: string) => {
     const element = document.querySelector(href);

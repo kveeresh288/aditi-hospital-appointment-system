@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Menu, X, Phone, Heart, CalendarCheck } from 'lucide-react';
-import { navLinks, hospitalInfo } from '../../data/hospitalData';
+import { navLinks } from '../../data/hospitalData';
 import { Button } from '../ui/Button';
 import { useScrollSpy } from '../../hooks/useAnimation';
+import { useHospitalSettings } from '../../hooks/useContent';
 
 export function Navbar() {
   const navigate = useNavigate();
+  const { settings } = useHospitalSettings();
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -59,10 +61,10 @@ export function Navbar() {
             </div>
             <div>
               <h1 className="text-xl font-bold text-heading">
-                {hospitalInfo.name}
+                {settings.name}
               </h1>
               <p className="text-xs text-muted hidden sm:block">
-                {hospitalInfo.localName}
+                {settings.local_name}
               </p>
             </div>
           </div>
@@ -87,11 +89,11 @@ export function Navbar() {
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center space-x-4">
             <a
-              href={`tel:${hospitalInfo.contact.phone}`}
+              href={`tel:${settings.phone}`}
               className="flex items-center text-primary hover:text-primary-hover transition-colors"
             >
               <Phone className="w-4 h-4 mr-2" />
-              <span className="font-medium">{hospitalInfo.contact.phone}</span>
+              <span className="font-medium">{settings.phone}</span>
             </a>
             <button
               onClick={() => navigate('/my-appointments')}
@@ -144,11 +146,11 @@ export function Navbar() {
             ))}
             <div className="pt-4 border-t border-border space-y-3">
               <a
-                href={`tel:${hospitalInfo.contact.phone}`}
+                href={`tel:${settings.phone}`}
                 className="flex items-center px-4 py-3 text-primary font-medium rounded-lg hover:bg-primary/5 transition-colors"
               >
                 <Phone className="w-4 h-4 mr-3" />
-                {hospitalInfo.contact.phone}
+                {settings.phone}
               </a>
               <button
                 onClick={() => {

@@ -1,11 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Phone, User, Building2, Clock, CheckCircle, AlertCircle } from 'lucide-react';
 import { createClient } from '@supabase/supabase-js';
-import { departments, preferredTimes } from '../../data/hospitalData';
+import { preferredTimes } from '../../data/hospitalData';
 import { Section, SectionHeader } from '../ui/Section';
 import { Button } from '../ui/Button';
 import { useInView } from '../../hooks/useAnimation';
 import { useBooking } from '../../hooks/useBooking';
+import { useDoctors } from '../../hooks/useContent';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -26,6 +27,11 @@ type FormStatus = 'idle' | 'loading' | 'success' | 'error';
 export function CallbackForm() {
   const { ref, isInView } = useInView(0.1);
   const { bookingData, clearBookingData } = useBooking();
+  const { data: doctors } = useDoctors();
+  const departments = useMemo(
+    () => Array.from(new Set(doctors.map((d) => d.department))),
+    [doctors]
+  );
   const [formData, setFormData] = useState<FormData>({
     fullName: '',
     phoneNumber: '',

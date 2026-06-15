@@ -14,6 +14,7 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import { MinimalHeader } from '../../components/layout/MinimalHeader';
+import { AdminSectionNav } from '../../components/admin/AdminSectionNav';
 import { Button } from '../../components/ui/Button';
 import { useAuth } from '../../hooks/useAuth';
 import { supabase } from '../../lib/supabase';
@@ -143,6 +144,8 @@ export function ReceptionDashboardPage() {
             <p className="text-sm text-muted">Manage incoming appointment requests</p>
           </div>
         </div>
+
+        <AdminSectionNav />
 
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">

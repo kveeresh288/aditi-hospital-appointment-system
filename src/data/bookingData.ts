@@ -1,104 +1,11 @@
-// Doctors available for online appointment booking.
-// workingDays: 0 = Sunday ... 6 = Saturday
-// startTime/endTime in 24h "HH:mm" format, slotMinutes = duration of each slot
-export interface BookingDoctor {
-  id: string;
-  name: string;
-  specialty: string;
-  qualifications: string;
-  experience: string;
-  department: string;
-  image: string;
-  workingDays: number[];
-  startTime: string;
-  endTime: string;
-  slotMinutes: number;
-  consultationFee: number;
-}
-
-export const bookingDoctors: BookingDoctor[] = [
-  {
-    id: 'dr-anjali-sharma',
-    name: 'Dr. Anjali Sharma',
-    specialty: 'Senior Consultant Gynecologist',
-    qualifications: 'MBBS, MD (OBG), DNB',
-    experience: '18+ Years Experience',
-    department: 'Gynecology',
-    image:
-      'https://images.pexels.com/photos/545229/pexels-photo-545229.jpeg?auto=compress&cs=tinysrgb&w=400',
-    workingDays: [1, 2, 3, 4, 5, 6],
-    startTime: '10:00',
-    endTime: '14:00',
-    slotMinutes: 20,
-    consultationFee: 500,
-  },
-  {
-    id: 'dr-rajesh-kulkarni',
-    name: 'Dr. Rajesh Kulkarni',
-    specialty: 'Consultant General Physician',
-    qualifications: 'MBBS, MD (General Medicine)',
-    experience: '15+ Years Experience',
-    department: 'General Medicine',
-    image:
-      'https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&cs=tinysrgb&w=400',
-    workingDays: [1, 2, 3, 4, 5, 6],
-    startTime: '18:00',
-    endTime: '21:00',
-    slotMinutes: 15,
-    consultationFee: 400,
-  },
-  {
-    id: 'dr-sneha-patil',
-    name: 'Dr. Sneha Patil',
-    specialty: 'Pediatric Specialist',
-    qualifications: 'MBBS, MD (Pediatrics)',
-    experience: '12+ Years Experience',
-    department: 'Pediatrics',
-    image:
-      'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=400',
-    workingDays: [1, 2, 3, 4, 5, 6],
-    startTime: '11:00',
-    endTime: '13:00',
-    slotMinutes: 20,
-    consultationFee: 450,
-  },
-  {
-    id: 'dr-vikram-deshmukh',
-    name: 'Dr. Vikram Deshmukh',
-    specialty: 'Consultant Surgeon',
-    qualifications: 'MBBS, MS (General Surgery)',
-    experience: '20+ Years Experience',
-    department: 'Surgery Consultation',
-    image:
-      'https://images.pexels.com/photos/3777931/pexels-photo-3777931.jpeg?auto=compress&cs=tinysrgb&w=400',
-    workingDays: [1, 2, 3, 4, 5, 6],
-    startTime: '15:00',
-    endTime: '18:00',
-    slotMinutes: 20,
-    consultationFee: 600,
-  },
-];
-
-// Departments available for booking (subset that maps to a doctor above,
-// plus general categories routed to the most relevant doctor)
-export const bookingDepartments = [
-  { label: 'Gynecology', doctorIds: ['dr-anjali-sharma'] },
-  { label: "Women's Health & Maternity Care", doctorIds: ['dr-anjali-sharma'] },
-  { label: 'General Medicine', doctorIds: ['dr-rajesh-kulkarni'] },
-  { label: 'Pediatrics', doctorIds: ['dr-sneha-patil'] },
-  { label: 'Surgery Consultation', doctorIds: ['dr-vikram-deshmukh'] },
-  {
-    label: 'Preventive Health Checkup',
-    doctorIds: ['dr-rajesh-kulkarni', 'dr-anjali-sharma'],
-  },
-];
+import type { Doctor } from '../types';
 
 export const genderOptions = ['Male', 'Female', 'Other'];
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 // Returns the next `count` dates (including today) on which the given doctor works
-export function getAvailableDates(doctor: BookingDoctor, count = 14): Date[] {
+export function getAvailableDates(doctor: Doctor, count = 14): Date[] {
   const dates: Date[] = [];
   let cursor = new Date();
   cursor.setHours(0, 0, 0, 0);
@@ -114,7 +21,7 @@ export function getAvailableDates(doctor: BookingDoctor, count = 14): Date[] {
 }
 
 // Generates all slot start times ("HH:mm") for a doctor on a given day
-export function generateTimeSlots(doctor: BookingDoctor): string[] {
+export function generateTimeSlots(doctor: Doctor): string[] {
   const slots: string[] = [];
   const [startH, startM] = doctor.startTime.split(':').map(Number);
   const [endH, endM] = doctor.endTime.split(':').map(Number);
@@ -165,6 +72,23 @@ export function generateBookingReference(): string {
   return `AH-${datePart}-${randomPart}`;
 }
 
-export function getDoctorById(id: string): BookingDoctor | undefined {
-  return bookingDoctors.find((doc) => doc.id === id);
+const DAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+// Formats a doctor's working days + hours as a friendly string, e.g.
+// "Mon - Sat, 10:00 AM - 2:00 PM"
+export function formatAvailability(doctor: Doctor): string {
+  const days = [...doctor.workingDays].sort((a, b) => a - b);
+  let daysLabel: string;
+
+  if (days.length === 0) {
+    daysLabel = '';
+  } else {
+    const isConsecutiveRun = days.every((d, i) => i === 0 || d === days[i - 1] + 1);
+    daysLabel = isConsecutiveRun && days.length > 1
+      ? `${DAY_LABELS[days[0]]} - ${DAY_LABELS[days[days.length - 1]]}`
+      : days.map((d) => DAY_LABELS[d]).join(', ');
+  }
+
+  const hoursLabel = `${formatTimeLabel(doctor.startTime)} - ${formatTimeLabel(doctor.endTime)}`;
+  return daysLabel ? `${daysLabel}, ${hoursLabel}` : hoursLabel;
 }

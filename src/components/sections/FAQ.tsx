@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
-import { faqs } from '../../data/hospitalData';
 import { Section, SectionHeader } from '../ui/Section';
 import { useInView } from '../../hooks/useAnimation';
+import { useTable } from '../../hooks/useContent';
+import { FALLBACK_FAQS } from '../../data/fallbackContent';
 
 function FAQItem({
   question,
@@ -56,6 +57,7 @@ function FAQItem({
 }
 
 export function FAQ() {
+  const { data: faqs } = useTable('faqs', FALLBACK_FAQS);
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
@@ -67,7 +69,7 @@ export function FAQ() {
       <div className="max-w-3xl mx-auto space-y-4">
         {faqs.map((faq, index) => (
           <FAQItem
-            key={index}
+            key={faq.id}
             question={faq.question}
             answer={faq.answer}
             isOpen={openIndex === index}

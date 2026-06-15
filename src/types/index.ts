@@ -18,22 +18,31 @@ export interface Feature {
 }
 
 export interface Service {
-  icon: LucideIcon;
+  id: string;
+  icon: string;
   title: string;
   description: string;
 }
 
+// Doctor: unified display info + booking schedule. workingDays: 0=Sun..6=Sat,
+// startTime/endTime in 24h "HH:mm" format, slotMinutes = duration of each slot.
 export interface Doctor {
   id: string;
   name: string;
   specialty: string;
   qualifications: string;
   experience: string;
-  availability: string;
+  department: string;
   image: string;
+  workingDays: number[];
+  startTime: string;
+  endTime: string;
+  slotMinutes: number;
+  consultationFee: number;
 }
 
 export interface Facility {
+  id: string;
   title: string;
   description: string;
   image: string;
@@ -47,6 +56,7 @@ export interface JourneyStep {
 }
 
 export interface Testimonial {
+  id: string;
   name: string;
   location: string;
   rating: number;
@@ -54,9 +64,33 @@ export interface Testimonial {
   avatar: string;
 }
 
-export interface FAQ {
+export interface Faq {
+  id: string;
   question: string;
   answer: string;
+}
+
+export interface HospitalSettings {
+  id: number;
+  name: string;
+  local_name: string;
+  tagline: string;
+  description: string;
+  address_street: string;
+  address_city: string;
+  address_state: string;
+  address_pincode: string;
+  phone: string;
+  email: string;
+  emergency_phone: string;
+  working_hours: string;
+  map_url: string;
+  map_embed_url: string;
+  hero_image: string;
+  social_facebook: string;
+  social_instagram: string;
+  social_twitter: string;
+  social_linkedin: string;
 }
 
 export interface CallbackFormData {
