@@ -57,11 +57,9 @@ export function ReviewStep({ draft, doctor, onConfirmed, onBack }: ReviewStepPro
 
     try {
       if (supabase) {
-        const { data, error: insertError } = await supabase
+        const { error: insertError } = await supabase
           .from('appointments')
-          .insert([appointmentPayload])
-          .select()
-          .single();
+          .insert([appointmentPayload]);
 
         if (insertError) {
           if (insertError.code === '23505') {
@@ -70,7 +68,13 @@ export function ReviewStep({ draft, doctor, onConfirmed, onBack }: ReviewStepPro
           throw insertError;
         }
 
-        onConfirmed(data as Appointment);
+        const newAppointment: Appointment = {
+          id: crypto.randomUUID(),
+          created_at: new Date().toISOString(),
+          notes: null,
+          ...appointmentPayload,
+        };
+        onConfirmed(newAppointment);
       } else {
         // Fallback to localStorage when Supabase isn't configured
         const stored: Appointment[] = JSON.parse(localStorage.getItem('appointments') || '[]');
