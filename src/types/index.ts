@@ -137,3 +137,16 @@ export interface BookingDraft {
   patientGender: string;
   reason: string;
 }
+
+export type TokenStatus = 'pending' | 'completed';
+
+export interface Token {
+  id: string;
+  token_number: number;
+  patient_name: string;
+  patient_phone: string;
+  patient_age: number | null;
+  patient_gender: string | null;
+  status: TokenStatus;
+  created_at: string;
+}

@@ -114,6 +114,20 @@ export function Hero() {
             </Button>
           </div>
 
+          {/* Token booking link */}
+          <div
+            className={`mt-4 transition-all duration-700 delay-450 ${
+              isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+            }`}
+          >
+            <button
+              onClick={() => navigate('/token')}
+              className="text-sm font-medium text-primary hover:text-primary-hover transition-colors underline-offset-2 hover:underline"
+            >
+              Need a quick token instead? Book a Token →
+            </button>
+          </div>
+
           {/* Trust Indicators */}
           <div
             className={`mt-12 pt-8 border-t border-border/50 transition-all duration-700 delay-500 ${

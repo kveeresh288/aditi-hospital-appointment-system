@@ -9,12 +9,13 @@ import {
   AlertCircle,
   XCircle,
   Loader2,
+  Ticket,
 } from 'lucide-react';
 import { MinimalHeader } from '../components/layout/MinimalHeader';
 import { Button } from '../components/ui/Button';
 import { supabase } from '../lib/supabase';
 import { formatDateLabel, formatTimeLabel } from '../data/bookingData';
-import type { Appointment } from '../types';
+import type { Appointment, Token } from '../types';
 
 const STATUS_STYLES: Record<string, string> = {
   pending: 'bg-amber-100 text-amber-700',
@@ -23,9 +24,15 @@ const STATUS_STYLES: Record<string, string> = {
   cancelled: 'bg-gray-100 text-gray-500',
 };
 
+const TOKEN_STATUS_STYLES: Record<string, string> = {
+  pending: 'bg-amber-100 text-amber-700',
+  completed: 'bg-secondary/10 text-secondary',
+};
+
 export function MyAppointmentsPage() {
   const [phone, setPhone] = useState('');
   const [appointments, setAppointments] = useState<Appointment[] | null>(null);
+  const [tokens, setTokens] = useState<Token[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [cancellingId, setCancellingId] = useState<string | null>(null);
@@ -42,17 +49,23 @@ export function MyAppointmentsPage() {
     setError('');
     setLoading(true);
     setAppointments(null);
+    setTokens(null);
 
     try {
       if (supabase) {
-        const { data, error: rpcError } = await supabase.rpc('get_appointments_by_phone', {
-          p_phone: cleanPhone,
-        });
-        if (rpcError) throw rpcError;
-        setAppointments((data ?? []) as Appointment[]);
+        const [appointmentsResult, tokensResult] = await Promise.all([
+          supabase.rpc('get_appointments_by_phone', { p_phone: cleanPhone }),
+          supabase.rpc('get_tokens_by_phone', { p_phone: cleanPhone }),
+        ]);
+        if (appointmentsResult.error) throw appointmentsResult.error;
+        if (tokensResult.error) throw tokensResult.error;
+        setAppointments((appointmentsResult.data ?? []) as Appointment[]);
+        setTokens((tokensResult.data ?? []) as Token[]);
       } else {
-        const stored: Appointment[] = JSON.parse(localStorage.getItem('appointments') || '[]');
-        setAppointments(stored.filter((a) => a.patient_phone === cleanPhone));
+        const storedAppointments: Appointment[] = JSON.parse(localStorage.getItem('appointments') || '[]');
+        const storedTokens: Token[] = JSON.parse(localStorage.getItem('tokens') || '[]');
+        setAppointments(storedAppointments.filter((a) => a.patient_phone === cleanPhone));
+        setTokens(storedTokens.filter((t) => t.patient_phone === cleanPhone));
       }
     } catch {
       setError('Something went wrong. Please try again.');
@@ -185,6 +198,31 @@ export function MyAppointmentsPage() {
                   </div>
                 );
               })}
+            </div>
+          )}
+
+          {tokens && tokens.length > 0 && (
+            <div className="mt-10">
+              <h2 className="text-lg font-bold text-heading mb-4 flex items-center gap-2">
+                <Ticket className="w-5 h-5 text-primary" />
+                My Tokens
+              </h2>
+              <div className="space-y-3">
+                {tokens.map((t) => (
+                  <div key={t.id} className="bg-white rounded-2xl border border-border p-4 flex items-center justify-between gap-4">
+                    <div>
+                      <p className="text-sm text-muted">Token Number</p>
+                      <p className="text-2xl font-bold text-primary">#{t.token_number}</p>
+                    </div>
+                    <div className="text-right">
+                      <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold capitalize ${TOKEN_STATUS_STYLES[t.status]}`}>
+                        {t.status}
+                      </span>
+                      <p className="text-xs text-muted mt-1">{formatDateLabel(new Date(t.created_at))}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </div>

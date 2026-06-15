@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Menu, X, Phone, Heart, CalendarCheck } from 'lucide-react';
+import { Menu, X, Phone, Heart, CalendarCheck, Ticket } from 'lucide-react';
 import { navLinks } from '../../data/hospitalData';
 import { Button } from '../ui/Button';
 import { useScrollSpy } from '../../hooks/useAnimation';
@@ -102,6 +102,13 @@ export function Navbar() {
               My Appointments
             </button>
             <Button
+              variant="outline"
+              onClick={() => navigate('/token')}
+              icon={<Ticket className="w-4 h-4" />}
+            >
+              Book Token
+            </Button>
+            <Button
               onClick={() => navigate('/book')}
               icon={<CalendarCheck className="w-4 h-4" />}
             >
@@ -161,6 +168,17 @@ export function Navbar() {
               >
                 My Appointments
               </button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setIsOpen(false);
+                  navigate('/token');
+                }}
+                className="w-full"
+                icon={<Ticket className="w-4 h-4" />}
+              >
+                Book Token
+              </Button>
               <Button
                 onClick={() => {
                   setIsOpen(false);
