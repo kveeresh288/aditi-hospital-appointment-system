@@ -5,6 +5,8 @@ A two-part hospital/clinic MVP built with React, TypeScript, Vite, Tailwind CSS,
 - **MVP1 — Hospital Website**: A modern, trust-focused marketing site showcasing services, doctors, and facilities.
 - **MVP2 — Appointment Booking System**: A patient-facing online booking flow plus a reception staff dashboard to manage incoming appointment requests in real time.
 
+**Live demo**: https://marvelous-mooncake-926a7d.netlify.app
+
 ## MVP1 Features (Website)
 
 - Sticky navigation with mobile-responsive menu

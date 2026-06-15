@@ -2,10 +2,10 @@
 
 ## Deployed Application
 
-- **Website + Booking System**: _(Netlify URL — added after deployment)_
-- **Patient Booking Flow**: `/book`
-- **My Appointments**: `/my-appointments`
-- **Reception Dashboard**: `/reception/login`
+- **Website + Booking System**: https://marvelous-mooncake-926a7d.netlify.app
+- **Patient Booking Flow**: https://marvelous-mooncake-926a7d.netlify.app/book
+- **My Appointments**: https://marvelous-mooncake-926a7d.netlify.app/my-appointments
+- **Reception Dashboard**: https://marvelous-mooncake-926a7d.netlify.app/reception/login
 
 ## Project Overview
 
