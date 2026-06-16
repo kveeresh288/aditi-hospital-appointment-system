@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   LogOut,
   Phone,
   Mail,
   CalendarCheck,
+  CalendarPlus,
   Clock,
   RefreshCw,
   CheckCircle2,
@@ -33,6 +35,7 @@ type Filter = (typeof FILTERS)[number];
 
 export function ReceptionDashboardPage() {
   const { signOut } = useAuth();
+  const navigate = useNavigate();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -174,6 +177,9 @@ export function ReceptionDashboardPage() {
           </div>
           <Button variant="outline" size="sm" icon={<RefreshCw className="w-4 h-4" />} onClick={fetchAppointments}>
             Refresh
+          </Button>
+          <Button variant="primary" size="sm" icon={<CalendarPlus className="w-4 h-4" />} onClick={() => navigate('/reception/book')}>
+            Book Appointment
           </Button>
         </div>
 

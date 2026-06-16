@@ -3,6 +3,7 @@ import { LogOut, RefreshCw, CheckCircle2, Loader2, Ticket, ShieldCheck, FileBarC
 import { MinimalHeader } from '../../components/layout/MinimalHeader';
 import { AdminSectionNav } from '../../components/admin/AdminSectionNav';
 import { TokenReportModal } from '../../components/admin/TokenReportModal';
+import { BookTokenModal } from '../../components/admin/BookTokenModal';
 import { Button } from '../../components/ui/Button';
 import { useAuth } from '../../hooks/useAuth';
 import { supabase } from '../../lib/supabase';
@@ -29,6 +30,7 @@ export function TokenManagerPage() {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [updating, setUpdating] = useState(false);
   const [report, setReport] = useState<TokenReport | null>(null);
+  const [showBookToken, setShowBookToken] = useState(false);
 
   const fetchTokens = useCallback(async () => {
     setLoading(true);
@@ -188,6 +190,9 @@ export function TokenManagerPage() {
             <Button variant="outline" size="sm" icon={<RefreshCw className="w-4 h-4" />} onClick={fetchTokens}>
               Refresh
             </Button>
+            <Button variant="outline" size="sm" icon={<Ticket className="w-4 h-4" />} onClick={() => setShowBookToken(true)}>
+              Book Token
+            </Button>
             <Button variant="primary" size="sm" icon={<FileBarChart className="w-4 h-4" />} onClick={generateReport}>
               Generate Report
             </Button>
@@ -271,6 +276,12 @@ export function TokenManagerPage() {
       </main>
 
       {report && <TokenReportModal report={report} onClose={() => setReport(null)} />}
+      {showBookToken && (
+        <BookTokenModal
+          onClose={() => setShowBookToken(false)}
+          onSuccess={() => { fetchTokens(); setShowBookToken(false); }}
+        />
+      )}
     </div>
   );
 }

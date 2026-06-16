@@ -7,9 +7,11 @@ import type { Appointment } from '../../../types';
 interface ConfirmationStepProps {
   appointment: Appointment;
   onBookAnother: () => void;
+  backTo?: string;
+  backLabel?: string;
 }
 
-export function ConfirmationStep({ appointment, onBookAnother }: ConfirmationStepProps) {
+export function ConfirmationStep({ appointment, onBookAnother, backTo = '/', backLabel = 'Back to Home' }: ConfirmationStepProps) {
   const dateObj = new Date(`${appointment.appointment_date}T00:00:00`);
 
   return (
@@ -65,9 +67,9 @@ export function ConfirmationStep({ appointment, onBookAnother }: ConfirmationSte
         <Button variant="outline" size="lg" onClick={onBookAnother}>
           Book Another Appointment
         </Button>
-        <Link to="/">
+        <Link to={backTo}>
           <Button variant="outline" size="lg" icon={<Home className="w-5 h-5" />}>
-            Back to Home
+            {backLabel}
           </Button>
         </Link>
       </div>
